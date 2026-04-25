@@ -1,12 +1,5 @@
 package com.lukegarces.openweather.utils
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cloud
-import androidx.compose.material.icons.filled.Nightlight
-import androidx.compose.material.icons.filled.Umbrella
-import androidx.compose.material.icons.filled.WbSunny
-import androidx.compose.ui.graphics.vector.ImageVector
-import com.lukegarces.openweather.data.model.WeatherResponse
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -23,15 +16,26 @@ class Utils {
             return sdf.format(date)
         }
 
-        fun getWeatherIcon(weather: WeatherResponse): ImageVector {
-            val isNight = System.currentTimeMillis() / 1000 > weather.sys.sunset
+        fun formatTime(dateText: String): String {
+             val input = "2026-04-25 06:00:00"
 
-            return when (weather.weather.firstOrNull()?.main) {
-                "Clear" -> if (isNight) Icons.Default.Nightlight else Icons.Default.WbSunny
-                "Clouds" -> Icons.Default.Cloud
-                "Rain" -> Icons.Default.Umbrella
-                else -> Icons.Default.Cloud
-            }
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+            val outputFormat = SimpleDateFormat("MMM dd, yyyy hh:mm", Locale.getDefault())
+
+            val date = inputFormat.parse(input)
+            val formatted = outputFormat.format(date!!)
+
+//            println(formatted) // Apr 25, 2026 06:00 AM = "2026-04-25 06:00:00"
+//
+//            val inputFormat = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+//            val outputFormat = java.text.SimpleDateFormat("MMM dd, yyyy hh:mm a", Locale.getDefault())
+//
+//            val date = inputFormat.parse(input)
+//            val formatted = outputFormat.format(date!!)
+//
+//            println(formatted) // Apr 25, 2026 06:00 AM
+            
+            return formatted
         }
     }
 }
