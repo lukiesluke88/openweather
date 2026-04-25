@@ -1,5 +1,6 @@
 package com.lukegarces.openweather.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lukegarces.openweather.data.model.ApiResult
@@ -28,8 +29,18 @@ class WeatherViewModel(private val repository: WeatherRepository) : ViewModel() 
 
     fun loadWeatherList(cityName: String) {
         viewModelScope.launch {
+            Log.i("TAG", "Call repositor to getWeatherList()")
             _weatherListState.value = ApiResult.Loading
             _weatherListState.value = repository.getWeatherList(cityName)
         }
+    }
+
+    private var hasLoaded = false
+
+    fun loadWeatherIfNeeded(city: String) {
+        if (hasLoaded) return
+
+        hasLoaded = true
+        loadWeatherList(city)
     }
 }
