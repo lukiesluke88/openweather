@@ -1,7 +1,18 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
 }
+
+val secrets = Properties()
+val secretsFile = rootProject.file("secrets.properties")
+
+if (secretsFile.exists()) {
+    secrets.load(secretsFile.inputStream())
+}
+
+val apiKey = secrets.getProperty("WEATHER_API_KEY", "")
 
 android {
     namespace = "com.lukegarces.openweather"
@@ -18,7 +29,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        buildConfigField("String", "WEATHER_API_KEY", "\"0766dc967f196d02df3473e8b363af48\"")
+        buildConfigField("String", "WEATHER_API_KEY", "\"$apiKey\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
