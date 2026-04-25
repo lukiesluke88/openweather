@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.lukegarces.openweather.data.model.ApiResult
+import com.lukegarces.openweather.view.component.WeatherContent
 import com.lukegarces.openweather.viewmodel.WeatherViewModel
 
 @Composable
@@ -30,9 +31,8 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
 
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        contentAlignment = Alignment.Center
+            .fillMaxSize().padding(top = 8.dp),
+        contentAlignment = Alignment.TopCenter
     ) {
             when (state) {
 
@@ -59,7 +59,6 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
                             Text("Retry")
                         }
                     }
-
             }
         }
     }
