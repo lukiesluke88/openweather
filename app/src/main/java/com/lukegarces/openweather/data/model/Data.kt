@@ -14,6 +14,17 @@ data class WeatherListResponse(
     val list: List<WeatherItem>
 )
 
+data class Coord(
+    val lon: Double,
+    val lat: Double
+)
+
+data class LocationInfo(
+    val coord: Coord,
+    val city: String,
+    val country: String
+)
+
 data class User(
     val name: String = "",
     val email: String = "",

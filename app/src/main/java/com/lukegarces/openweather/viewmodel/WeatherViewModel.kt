@@ -37,4 +37,11 @@ class WeatherViewModel(
             _weatherListState.value = repository.getWeatherList(cityName)
         }
     }
+
+    fun loadWeatherByCurrentLocation() {
+        viewModelScope.launch(dispatcher) {
+            _weatherState.value = ApiResult.Loading
+            _weatherState.value = repository.getWeatherByCurrentLocation()
+        }
+    }
 }

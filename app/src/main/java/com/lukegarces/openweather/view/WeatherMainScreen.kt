@@ -26,10 +26,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lukegarces.openweather.R
+import com.lukegarces.openweather.data.model.LocationHelper
 import com.lukegarces.openweather.data.model.User
 import com.lukegarces.openweather.data.remote.RetrofitInstance
 import com.lukegarces.openweather.data.repository.WeatherRepository
@@ -42,9 +45,10 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherMainScreen(user: User, onLogout: () -> Unit) {
+    val context = LocalContext.current
     var showLogoutDialog by remember { mutableStateOf(false) }
     val repository = remember {
-        WeatherRepository(RetrofitInstance.api)
+        WeatherRepository(RetrofitInstance.api, locationHelper = LocationHelper(context))
     }
 
     val viewModel: WeatherViewModel = viewModel(
@@ -52,6 +56,7 @@ fun WeatherMainScreen(user: User, onLogout: () -> Unit) {
     )
 
     LaunchedEffect(Unit) {
+        viewModel.loadWeatherByCurrentLocation()
         viewModel.loadWeatherList("manila")
     }
 

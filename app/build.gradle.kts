@@ -78,6 +78,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
     implementation("com.google.firebase:firebase-firestore")
+    implementation(libs.play.services.location)
 
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
