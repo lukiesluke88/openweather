@@ -17,23 +17,40 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.lukegarces.openweather.R
+import com.lukegarces.openweather.data.model.LoginState
+import com.lukegarces.openweather.viewmodel.AuthViewModel
 
 @Composable
-fun SignInScreen(onSignInClick: (email: String, password: String) -> Unit,
-    onRegisterClick: () -> Unit) {
+fun SignInScreen(
+    viewModel: AuthViewModel, onLoginSuccess: () -> Unit,
+    onRegisterClick: () -> Unit
+) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+    val loginState by viewModel.loginState.collectAsState()
+
+    LaunchedEffect(loginState) {
+        if (loginState is LoginState.Success) {
+            onLoginSuccess()
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -51,7 +68,7 @@ fun SignInScreen(onSignInClick: (email: String, password: String) -> Unit,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Sign In",
+                    text = stringResource(R.string.app_name),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -92,23 +109,50 @@ fun SignInScreen(onSignInClick: (email: String, password: String) -> Unit,
 
                 Button(
                     onClick = {
-                        onSignInClick(email.trim(), password.trim())
+
+                        if (email.length < 4 || password.length < 4) {
+                            errorMessage = "Invalid email or password"
+                            return@Button
+                        }
+
+                        errorMessage = null
+
+                        viewModel.login(
+                            email = email.trim(),
+                            password = password.trim()
+                        )
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = loginState !is LoginState.Loading
                 ) {
-                    Text("Sign In")
+                    Text(
+                        if (loginState is LoginState.Loading) {
+                            "Signing in..."
+                        } else {
+                            "Sign In"
+                        }
+                    )
+                }
+
+                if (loginState is LoginState.Error || errorMessage != null) {
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "Invalid email or password",
+                            color = MaterialTheme.colorScheme.error,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Text("Not registered?")
 
-                    TextButton(
-                        onClick = onRegisterClick
-                    ) {
+                    TextButton(onClick = onRegisterClick) {
                         Text("Register")
                     }
                 }

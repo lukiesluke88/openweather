@@ -20,6 +20,11 @@ data class WeatherListResponse(
     val list: List<WeatherItem>
 )
 
+data class User(
+    val email: String = "",
+    val password: String = ""
+)
+
 data class WeatherItem(
     val dt_txt: String,
     val main: Main,
@@ -65,51 +70,4 @@ data class Sys(
     val country: String,
     val sunrise: Long,
     val sunset: Long
-)
-
-val mockWeatherResponse = WeatherResponse(
-    coord = Coord(
-        lon = 120.98,
-        lat = 14.60
-    ),
-    weather = listOf(
-        Weather(
-            id = 800,
-            main = "Clear",
-            description = "clear sky",
-            icon = "01d"
-        )
-    ),
-    base = "stations",
-    main = Main(
-        temp = 300.15,        // Kelvin (~27°C)
-        feels_like = 303.15,
-        temp_min = 298.15,
-        temp_max = 302.15,
-        pressure = 1012,
-        humidity = 70,
-        sea_level = 1012,
-        grnd_level = 1008
-    ),
-    visibility = 10000,
-    wind = Wind(
-        speed = 3.5,
-        deg = 120,
-        gust = 5.0
-    ),
-    clouds = Clouds(
-        all = 10
-    ),
-    dt = 1713960000,
-    sys = Sys(
-        type = 1,
-        id = 1234,
-        country = "PH",
-        sunrise = 1713920000,
-        sunset = 1713965000
-    ),
-    timezone = 28800,
-    id = 1701668,
-    name = "Manila",
-    cod = 200
 )

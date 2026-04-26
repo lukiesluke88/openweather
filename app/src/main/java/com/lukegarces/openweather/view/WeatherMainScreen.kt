@@ -21,9 +21,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.lukegarces.openweather.R
 import com.lukegarces.openweather.data.remote.RetrofitInstance
 import com.lukegarces.openweather.data.repository.WeatherRepository
 import com.lukegarces.openweather.view.component.WeatherTabsContent
@@ -79,7 +81,7 @@ fun WeatherMainScreen(onLogout: () -> Unit) {
         }) {
         Scaffold(topBar = {
             TopAppBar(
-                title = { Text("Weather App") },
+                title = { Text(text = stringResource(R.string.app_name)) },
                 navigationIcon = {
                     IconButton(onClick = {
                         scope.launch { drawerState.open() }
