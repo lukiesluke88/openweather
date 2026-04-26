@@ -30,10 +30,8 @@ This app fetches real-time weather data using the OpenWeather API and also inclu
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
-cd YOUR_REPOSITORY
+git clone https://github.com/lukiesluke88/openweather.git
 ```
-
 ---
 
 ### 2. Setup API Key 🔐
