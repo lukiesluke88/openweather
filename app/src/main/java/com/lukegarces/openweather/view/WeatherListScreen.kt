@@ -30,7 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.lukegarces.openweather.data.model.ApiResult
-import com.lukegarces.openweather.utils.Utils.Utils.formatTime
+import com.lukegarces.openweather.utils.Utils.Utils.formatTimeStandard
 import com.lukegarces.openweather.viewmodel.WeatherViewModel
 
 @Composable
@@ -73,7 +73,7 @@ fun WeatherListScreen(viewModel: WeatherViewModel) {
                                     modifier = Modifier
                                         .padding(top = 4.dp), horizontalAlignment = Alignment.End
                                 ) {
-                                    Text(formatTime(item.dt_txt), fontWeight = FontWeight.Bold)
+                                    Text(formatTimeStandard(item.dt_txt), fontWeight = FontWeight.Bold)
                                     Text("${item.main.temp}°C")
                                     Text(item.weather.firstOrNull()?.description ?: "")
                                 }

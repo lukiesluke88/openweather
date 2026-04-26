@@ -7,34 +7,28 @@ import java.util.TimeZone
 
 class Utils {
     object Utils {
-        fun formatTime(timestamp: Long, timezone: Int): String {
-            val date = Date((timestamp + timezone) * 1000)
+
+        fun formatTime(timestamp: Long, timezoneOffset: Int): String {
+            val date = Date(timestamp * 1000)
 
             val sdf = SimpleDateFormat("hh:mm a", Locale.getDefault())
-            sdf.timeZone = TimeZone.getTimeZone("UTC")
+
+            val hours = timezoneOffset / 3600
+            val minutes = (timezoneOffset % 3600) / 60
+
+            val tzId = String.format("GMT%+d:%02d", hours, minutes)
+            sdf.timeZone = TimeZone.getTimeZone(tzId)
 
             return sdf.format(date)
         }
 
-        fun formatTime(dateText: String): String {
-             val input = "2026-04-25 06:00:00"
+        fun formatTimeStandard(dateText: String): String {
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val outputFormat = SimpleDateFormat("MMM dd, yyyy hh:mm a", Locale.getDefault())
 
-            val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-            val outputFormat = SimpleDateFormat("MMM dd, yyyy hh:mm", Locale.getDefault())
-
-            val date = inputFormat.parse(input)
+            val date = inputFormat.parse(dateText)
             val formatted = outputFormat.format(date!!)
 
-//            println(formatted) // Apr 25, 2026 06:00 AM = "2026-04-25 06:00:00"
-//
-//            val inputFormat = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-//            val outputFormat = java.text.SimpleDateFormat("MMM dd, yyyy hh:mm a", Locale.getDefault())
-//
-//            val date = inputFormat.parse(input)
-//            val formatted = outputFormat.format(date!!)
-//
-//            println(formatted) // Apr 25, 2026 06:00 AM
-            
             return formatted
         }
     }
