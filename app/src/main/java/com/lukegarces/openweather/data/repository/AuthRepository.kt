@@ -9,4 +9,8 @@ class AuthRepository(
     suspend fun login(email: String, password: String): Result<User> {
         return apiService.loginUser(email, password)
     }
+
+    suspend fun register(user: User): Result<Unit> {
+        return apiService.registerUser(user)
+    }
 }

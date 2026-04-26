@@ -37,7 +37,8 @@ import com.lukegarces.openweather.viewmodel.AuthViewModel
 
 @Composable
 fun SignInScreen(
-    viewModel: AuthViewModel, onLoginSuccess: () -> Unit,
+    viewModel: AuthViewModel,
+    onLoginSuccess: () -> Unit,
     onRegisterClick: () -> Unit
 ) {
     var email by rememberSaveable { mutableStateOf("") }

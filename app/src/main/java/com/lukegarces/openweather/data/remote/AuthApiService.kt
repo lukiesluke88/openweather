@@ -32,4 +32,23 @@ class AuthApiService {
 
         return Result.success(user)
     }
+
+    suspend fun registerUser(user: User): Result<Unit> {
+        val existingUser = firestore
+            .collection("users")
+            .whereEqualTo("email", user.email)
+            .get()
+            .await()
+
+        if (!existingUser.isEmpty) {
+            return Result.failure(Exception("Email already exists"))
+        }
+
+        firestore
+            .collection("users")
+            .add(user)
+            .await()
+
+        return Result.success(Unit)
+    }
 }
