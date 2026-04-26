@@ -20,17 +20,20 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lukegarces.openweather.R
 import com.lukegarces.openweather.data.model.User
 import com.lukegarces.openweather.data.remote.RetrofitInstance
 import com.lukegarces.openweather.data.repository.WeatherRepository
+import com.lukegarces.openweather.view.component.ConfirmAlertDialog
 import com.lukegarces.openweather.view.component.WeatherTabsContent
 import com.lukegarces.openweather.viewmodel.WeatherViewModel
 import com.lukegarces.openweather.viewmodel.WeatherViewModelFactory
@@ -39,7 +42,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherMainScreen(user: User, onLogout: () -> Unit) {
-
+    var showLogoutDialog by remember { mutableStateOf(false) }
     val repository = remember {
         WeatherRepository(RetrofitInstance.api)
     }
@@ -59,6 +62,21 @@ fun WeatherMainScreen(user: User, onLogout: () -> Unit) {
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
+    ConfirmAlertDialog(
+        show = showLogoutDialog,
+        title = "Logout",
+        message = "Are you sure you want to logout?",
+        confirmText = "Yes",
+        dismissText = "Cancel",
+        onConfirm = {
+            showLogoutDialog = false
+            onLogout()
+        },
+        onDismiss = {
+            showLogoutDialog = false
+        }
+    )
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -89,8 +107,10 @@ fun WeatherMainScreen(user: User, onLogout: () -> Unit) {
                     label = { Text("Logout") },
                     selected = false,
                     onClick = {
-                        scope.launch { drawerState.close() }
-                        onLogout()
+                        scope.launch {
+                            drawerState.close()
+                            showLogoutDialog = true
+                        }
                     }
                 )
             }
