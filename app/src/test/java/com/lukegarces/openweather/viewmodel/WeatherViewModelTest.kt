@@ -1,6 +1,7 @@
 package com.lukegarces.openweather.viewmodel
 
 import com.lukegarces.openweather.data.model.ApiResult
+import com.lukegarces.openweather.data.model.Coord
 import com.lukegarces.openweather.data.model.Main
 import com.lukegarces.openweather.data.model.Sys
 import com.lukegarces.openweather.data.model.Weather
@@ -9,9 +10,15 @@ import com.lukegarces.openweather.data.model.WeatherListResponse
 import com.lukegarces.openweather.data.model.WeatherResponse
 import com.lukegarces.openweather.data.repository.WeatherRepository
 import com.lukegarces.openweather.util.MainDispatcherRule
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -25,6 +32,7 @@ import org.mockito.kotlin.whenever
 class WeatherViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
+    private val testDispatcher = StandardTestDispatcher()
     private lateinit var repository: WeatherRepository
     private lateinit var viewModel: WeatherViewModel
 
@@ -38,10 +46,19 @@ class WeatherViewModelTest {
         )
     }
 
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
+
     @Test
     fun loadWeatherReturnsSuccessState() = runTest {
 
         val fakeWeather = WeatherResponse(
+            coord = Coord(
+                lon = 120.98,
+                lat = 14.60
+            ),
             weather = listOf(
                 Weather(
                     main = "Clouds",
@@ -120,5 +137,51 @@ class WeatherViewModelTest {
         assertEquals("Clear", result.data.list[0].weather[0].main)
 
         verify(repository).getWeatherList("Manila")
+    }
+
+    @Test
+    fun loadWeatherByCurrentLocation() = runTest {
+        val fakeWeather = WeatherResponse(
+            coord = Coord(
+                lon = 120.98,
+                lat = 14.60
+            ),
+            weather = listOf(
+                Weather(
+                    main = "Clouds",
+                    description = "broken clouds",
+                    icon = "04d"
+                )
+            ),
+            base = "stations",
+            main = Main(temp = 30.5),
+            dt = 1714118400,
+            sys = Sys(
+                country = "PH",
+                sunrise = 1714082400,
+                sunset = 1714126800
+            ),
+            timezone = 28800,
+            name = "Manila"
+        )
+
+        whenever(repository.getWeatherByCurrentLocation())
+            .thenReturn(ApiResult.Success(fakeWeather))
+
+        viewModel.loadWeatherByCurrentLocation()
+
+        advanceUntilIdle()
+
+        val state = viewModel.weatherState.value
+
+        assertTrue(state is ApiResult.Success)
+
+        val success = state as ApiResult.Success
+
+        assertEquals("Manila", success.data.name)
+        assertEquals("PH", success.data.sys.country)
+        assertEquals(30.5, success.data.main.temp, 0.0)
+
+        verify(repository).getWeatherByCurrentLocation()
     }
 }

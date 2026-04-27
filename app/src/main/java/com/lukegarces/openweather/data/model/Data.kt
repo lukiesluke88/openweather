@@ -1,6 +1,7 @@
 package com.lukegarces.openweather.data.model
 
 data class WeatherResponse(
+    val coord: Coord,
     val weather: List<Weather>,
     val base: String,
     val main: Main,
