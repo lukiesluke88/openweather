@@ -3,6 +3,7 @@ package com.lukegarces.openweather.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lukegarces.openweather.data.SessionManager
 import com.lukegarces.openweather.data.model.LoginState
 import com.lukegarces.openweather.data.model.RegisterState
 import com.lukegarces.openweather.data.model.User
@@ -11,9 +12,31 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
+class AuthViewModel(
+    private val repository: AuthRepository,
+    private val sessionManager: SessionManager
+) : ViewModel() {
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
     val loginState: StateFlow<LoginState> = _loginState
+
+    init {
+        checkSavedSession()
+    }
+    private fun checkSavedSession() {
+        viewModelScope.launch {
+            sessionManager.userEmail.collect { email ->
+                if (!email.isNullOrEmpty()) {
+                    _loginState.value = LoginState.Success(
+                        User(
+                            name = "",
+                            email = email,
+                            password = ""
+                        )
+                    )
+                }
+            }
+        }
+    }
 
     private val _registerState = MutableStateFlow<RegisterState>(RegisterState.Idle)
     val registerState: StateFlow<RegisterState> = _registerState
@@ -26,6 +49,7 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
                 val result = repository.login(email, password)
 
                 result.onSuccess { user ->
+                    sessionManager.saveUser(user.email)
                     _loginState.value = LoginState.Success(user)
                 }.onFailure { e ->
                     _loginState.value = LoginState.Error(
@@ -41,7 +65,10 @@ class AuthViewModel(private val repository: AuthRepository) : ViewModel() {
     }
 
     fun logout() {
-        _loginState.value = LoginState.Idle
+        viewModelScope.launch {
+            sessionManager.clearUser()
+            _loginState.value = LoginState.Idle
+        }
     }
 
     fun register(name: String, email: String, password: String) {

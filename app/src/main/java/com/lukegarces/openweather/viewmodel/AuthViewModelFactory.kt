@@ -2,10 +2,14 @@ package com.lukegarces.openweather.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.lukegarces.openweather.data.SessionManager
 import com.lukegarces.openweather.data.repository.AuthRepository
 
-class AuthViewModelFactory(private val repository: AuthRepository) : ViewModelProvider.Factory {
+class AuthViewModelFactory(
+    private val repository: AuthRepository,
+    private val sessionManager: SessionManager
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return AuthViewModel(repository) as T
+        return AuthViewModel(repository, sessionManager) as T
     }
 }

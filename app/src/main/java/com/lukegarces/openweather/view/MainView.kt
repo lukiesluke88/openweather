@@ -6,12 +6,16 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.lukegarces.openweather.data.SessionManager
 import com.lukegarces.openweather.data.model.LoginState
 import com.lukegarces.openweather.data.remote.AuthApiService
 import com.lukegarces.openweather.data.repository.AuthRepository
@@ -20,11 +24,12 @@ import com.lukegarces.openweather.viewmodel.AuthViewModelFactory
 
 @Composable
 fun MainView() {
+    val context = LocalContext.current
+
     val authViewModel: AuthViewModel = viewModel(
         factory = AuthViewModelFactory(
-            AuthRepository(
-                AuthApiService()
-            )
+            AuthRepository(AuthApiService()),
+            SessionManager(context)
         )
     )
 
