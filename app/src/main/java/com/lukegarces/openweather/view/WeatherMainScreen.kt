@@ -82,9 +82,8 @@ fun WeatherMainScreen(user: User, onLogout: () -> Unit) {
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                HeaderNavigationContent(user)
 
-                Divider()
+                HeaderNavigationContent(user)
 
                 NavigationDrawerItem(
                     label = { Text("Logout") },
