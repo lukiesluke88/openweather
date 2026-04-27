@@ -51,3 +51,7 @@ WEATHER_API_KEY=YOUR_API_KEY
 3. Replace `YOUR_API_KEY` with your actual API key.
 
 ---
+
+### Test with coverage
+<img width="1440" height="900" alt="test_coverage" src="https://github.com/user-attachments/assets/4ac14b5a-f9c6-4fcd-b205-0381262c7d77" />
+
