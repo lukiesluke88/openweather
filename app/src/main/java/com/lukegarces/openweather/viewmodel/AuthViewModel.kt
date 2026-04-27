@@ -22,13 +22,14 @@ class AuthViewModel(
     init {
         checkSavedSession()
     }
+
     private fun checkSavedSession() {
         viewModelScope.launch {
-            sessionManager.userEmail.collect { email ->
+            sessionManager.user.collect { (name, email) ->
                 if (!email.isNullOrEmpty()) {
                     _loginState.value = LoginState.Success(
                         User(
-                            name = "",
+                            name = name ?: "",
                             email = email,
                             password = ""
                         )
@@ -49,7 +50,7 @@ class AuthViewModel(
                 val result = repository.login(email, password)
 
                 result.onSuccess { user ->
-                    sessionManager.saveUser(user.email)
+                    sessionManager.saveUser(user.name, user.email)
                     _loginState.value = LoginState.Success(user)
                 }.onFailure { e ->
                     _loginState.value = LoginState.Error(
