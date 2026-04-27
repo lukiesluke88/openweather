@@ -52,7 +52,7 @@ WEATHER_API_KEY=YOUR_API_KEY
 
 ---
 
-## 🎬 App Demo
+## 🎬 App Demo click the image to watch
 
 [![Watch Demo](https://img.youtube.com/vi/-9b-28SJBRQ/0.jpg)](https://youtu.be/-9b-28SJBRQ)
 
