@@ -54,6 +54,7 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
         )
 //        viewModel.loadWeather(cityName = "manila")
     }
+    val cachedWeather by viewModel.cachedWeather.collectAsState(initial = null)
 
     Box(
         modifier = Modifier
@@ -68,6 +69,9 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
                     modifier = Modifier.fillMaxWidth(),
                     color = Color.Magenta.copy(alpha = 0.5f)
                 )
+                cachedWeather?.let {
+                    WeatherContent(it)
+                }
             }
 
             is ApiResult.Success -> {
