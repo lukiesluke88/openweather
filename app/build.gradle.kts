@@ -13,6 +13,10 @@ if (secretsFile.exists()) {
     secrets.load(secretsFile.inputStream())
 }
 
+val keystoreProperties = Properties().apply {
+    load(rootProject.file("keystore.properties").inputStream())
+}
+
 val apiKey = secrets.getProperty("WEATHER_API_KEY", "")
 
 android {
@@ -32,6 +36,26 @@ android {
 
         buildConfigField("String", "WEATHER_API_KEY", "\"$apiKey\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        create("openWeatherKey") {
+            storeFile = file(keystoreProperties["storeFile"] as String)
+            storePassword = keystoreProperties["storePassword"] as String
+            keyAlias = keystoreProperties["keyAlias"] as String
+            keyPassword = keystoreProperties["keyPassword"] as String
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("openWeatherKey")
+        }
+
+        release {
+            signingConfig = signingConfigs.getByName("openWeatherKey")
+            isMinifyEnabled = false
+        }
     }
 
     buildTypes {
