@@ -1,5 +1,6 @@
 package com.lukegarces.openweather.viewmodel
 
+import com.lukegarces.openweather.data.SessionManager
 import com.lukegarces.openweather.data.model.ApiResult
 import com.lukegarces.openweather.data.model.Coord
 import com.lukegarces.openweather.data.model.Main
@@ -12,8 +13,7 @@ import com.lukegarces.openweather.data.repository.WeatherRepository
 import com.lukegarces.openweather.util.MainDispatcherRule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -35,14 +35,20 @@ class WeatherViewModelTest {
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var repository: WeatherRepository
     private lateinit var viewModel: WeatherViewModel
+    private lateinit var sessionManager: SessionManager
 
     @Before
     fun setup() {
         repository = mock()
+        sessionManager = mock()
+
+        whenever(sessionManager.cachedWeather)
+            .thenReturn(flowOf(null as WeatherResponse?))
 
         viewModel = WeatherViewModel(
             repository = repository,
-            dispatcher = mainDispatcherRule.testDispatcher
+            dispatcher = mainDispatcherRule.testDispatcher,
+            sessionManager = sessionManager
         )
     }
 
