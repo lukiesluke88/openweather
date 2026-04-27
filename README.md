@@ -52,9 +52,9 @@ WEATHER_API_KEY=YOUR_API_KEY
 
 ---
 
-### Quick demo for Open Weather App
+## 🎬 App Demo
 
-[![App Demo](images/thumbnail.png)](https://your-video-link.com)
+[![Watch Demo](https://img.youtube.com/vi/-9b-28SJBRQ/0.jpg)](https://youtu.be/-9b-28SJBRQ)
 
 ---
 ### Test with coverage
