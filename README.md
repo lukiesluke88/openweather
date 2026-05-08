@@ -1,4 +1,4 @@
-# 🌦️ OpenWeather App
+# 🌦️ OpenWeather App (Exam)
 
 A simple weather application built using **Kotlin**, **MVVM architecture**, and **Jetpack Compose**.
 This app fetches real-time weather data using the OpenWeather API and also includes **(sign in and registration)** powered by **Firebase Firestore**.
